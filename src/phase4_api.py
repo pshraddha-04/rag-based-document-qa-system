@@ -197,17 +197,6 @@ async def upload(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, f)
 
     try:
-<<<<<<< HEAD
-        # Step 1: extract + chunk only the new file
-        processor = DocumentProcessor(str(CONFIG_PATH))
-        all_chunks = processor.process_all_documents()
-        new_chunks = [c for c in all_chunks if Path(c["file_name"]).name == safe_name or c["file_name"] == safe_name]
-        logger.info(f"New file produced {len(new_chunks)} chunks")
-
-        # Step 2: embed + append only new chunks — no full rebuild
-        engine = get_search_engine()
-        inserted = engine.index_single_document(new_chunks)
-=======
         loop = asyncio.get_event_loop()
         chunks = await loop.run_in_executor(
             None, DocumentProcessor(str(CONFIG_PATH)).process_single_document, dest
@@ -215,7 +204,6 @@ async def upload(file: UploadFile = File(...)):
         inserted = await loop.run_in_executor(
             None, get_search_engine().index_user_document, chunks
         )
->>>>>>> a67117caacf65b117b2e2ac2443bc88f6856c83b
     except Exception as e:
         logger.error(f"/upload error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
