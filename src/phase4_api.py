@@ -200,7 +200,7 @@ def upload(file: UploadFile = File(...)):
         # Step 1: extract + chunk only the new file
         processor = DocumentProcessor(str(CONFIG_PATH))
         all_chunks = processor.process_all_documents()
-        new_chunks = [c for c in all_chunks if c["file_name"] == safe_name]
+        new_chunks = [c for c in all_chunks if Path(c["file_name"]).name == safe_name or c["file_name"] == safe_name]
         logger.info(f"New file produced {len(new_chunks)} chunks")
 
         # Step 2: embed + append only new chunks — no full rebuild
