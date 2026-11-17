@@ -1,10 +1,9 @@
 from huggingface_hub import InferenceClient
-import yaml
+import os
+from dotenv import load_dotenv
 
-with open("config.yaml") as f:
-    config = yaml.safe_load(f)
-
-token = config["llm"]["hf_token"]
+load_dotenv()
+token = os.getenv("HF_TOKEN", "")
 
 # Test a few known free-tier chat models
 candidates = [
